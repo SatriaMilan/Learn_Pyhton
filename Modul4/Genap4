@@ -1,0 +1,87 @@
+import math
+
+def transform_decorator(func):
+    def wrapper(x, y, z):
+        point_a = (x, y)
+        point_b = (y, z)
+
+        tx = 2
+        ty = -3
+
+        # Transformasi Pertama : Translasi
+        point_a = translate(point_a, tx, ty)
+        point_b = translate(point_b, tx, ty)
+
+        # Transformasi Kedua : Rotasi
+        angle = 60  # Derajat
+        point_a = rotate(point_a, angle)
+        point_b = rotate(point_b, angle)
+
+        # Transformasi Ketiga: Perbesaran Skala
+        sx_factor = 1.5
+        sy_factor = 2
+        point_a = scale(point_a, sx_factor, sy_factor)
+        point_b = scale(point_b, sx_factor, sy_factor)
+
+        # Menampilkan Hasil Transformasi Di Atas
+        print(f"Titik A Setelah Transformasi : {point_a}\n")
+        print(f"Titik B Setelah Transformasi : {point_b}\n")
+
+        # Menghitung Persamaan Garis Hasil Transformasi
+        m, c = calculate_line_equation(point_a, point_b)
+        print(f"Persamaan Garis Hasil Transformasi : y = {m:.2f}x + {c:.2f}\n")
+
+        # Menjalankan Fungsi Asli Dengan Hasil Transformasi
+        original_result = func(x, y, z)
+
+        # Menampilkan Persamaan Garis Asli
+        original_m, original_c = calculate_line_equation((x, y), (y, z))
+        print(f"Persamaan Garis Asli : y = {original_m:.2f}x + {original_c:.2f}\n")
+
+        return original_result
+
+    return wrapper
+
+# Fungsi Translasi
+def translate(point, tx, ty):
+    x, y = point
+    new_x = x + tx
+    new_y = y + ty
+    return (new_x, new_y)
+
+# Fungsi Rotasi
+def rotate(point, angle):
+    x, y = point
+    angle_rad = math.radians(angle)
+    new_x = x * math.cos(angle_rad) - y * math.sin(angle_rad)
+    new_y = x * math.sin(angle_rad) + y * math.cos(angle_rad)
+    return (new_x, new_y)
+
+# Fungsi Perbesaran Skala
+def scale(point, sx, sy):
+    x, y = point
+    new_x = x * sx
+    new_y = y * sy
+    return (new_x, new_y)
+
+# Fungsi Menghitung Persamaan Garis
+def calculate_line_equation(point_a, point_b):
+    x1, y1 = point_a
+    x2, y2 = point_b
+    m = (y2 - y1) / (x2 - x1)
+    c = y1 - m * x1
+    return m, c
+
+
+@transform_decorator
+def main(x, y, z):
+    pass
+
+nim = input("Masukkan NIM Genap (3 Digit Terakhir) : ")
+
+x = int(nim[0])
+y = int(nim[1])
+z = int(nim[2])
+
+main(-x, y, z)
+
